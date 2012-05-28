@@ -1,8 +1,6 @@
 package com.github.mysql2excel.model;
 
-import com.github.mysql2excel.Utils;
-
-public class Table {
+public class Table extends Model {
 
 	private String name;
 
@@ -14,7 +12,4 @@ public class Table {
 		this.name = name;
 	}
 
-	public String toString() {
-		return Utils.toString(this);
-	}
 }

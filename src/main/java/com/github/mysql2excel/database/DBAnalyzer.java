@@ -1,4 +1,4 @@
-package com.github.mysql2excel;
+package com.github.mysql2excel.database;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -11,11 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class DBHelper {
+import com.github.mysql2excel.helper.Constants;
+import com.github.mysql2excel.helper.M2EHelper;
+import com.github.mysql2excel.model.Column;
+import com.github.mysql2excel.model.Table;
+
+public class DBAnalyzer {
 
 	public static Connection getConnection() {
 		Connection conn = null;
-		Properties config = Utils.loadProperties(Constants.JDBC_CONFIG_FILE);
+		Properties config = M2EHelper.loadProperties(Constants.JDBC_CONFIG_FILE);
 		String driver = config.getProperty("jdbc.driver");
 		String url = config.getProperty("jdbc.url");
 		String user = config.getProperty("jdbc.user");
@@ -41,20 +46,34 @@ public class DBHelper {
 		return meta;
 	}
 
-	public static List<Map<String, Object>> getTables() {
+	public static Map<String, Object> getDatabaseInfo() {
+		DatabaseMetaData meta = getDatabaseMetaData();
+		Map<String, Object> info = new HashMap<String, Object>();
+		try {
+			String version = meta.getDatabaseProductVersion();
+			String name = meta.getDatabaseProductName();
+			info.put("name", name);
+			info.put("version", version);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return info;
+	}
+
+	public static List<Table> getTables() {
 		DatabaseMetaData m = getDatabaseMetaData();
 		String catalog = null;
 		String schemaPattern = null;
 		String tableNamePattern = "%";
 		String[] types = { "TABLE" };
-		List<Map<String, Object>> tableList = new ArrayList<Map<String, Object>>();
+		List<Table> tableList = new ArrayList<Table>();
 		try {
 			ResultSet rs = m.getTables(catalog, schemaPattern,
 					tableNamePattern, types);
 			while (rs.next()) {
 				String tableName = rs.getString("TABLE_NAME");
-				Map<String, Object> table = new HashMap<String, Object>();
-				table.put("name", tableName);
+				Table table = new Table();
+				table.setName(tableName);
 				tableList.add(table);
 			}
 		} catch (SQLException e) {
@@ -63,9 +82,9 @@ public class DBHelper {
 		return tableList;
 	}
 
-	public static List<Map<String, Object>> getColumns(String table) {
+	public static List<Column> getColumns(String table) {
 		DatabaseMetaData m = getDatabaseMetaData();
-		List<Map<String, Object>> columnList = new ArrayList<Map<String, Object>>();
+		List<Column> columnList = new ArrayList<Column>();
 
 		String catalog = null;
 		String schemaPattern = null;
@@ -78,9 +97,10 @@ public class DBHelper {
 				String name = rs.getString("COLUMN_NAME");
 				String type = rs.getString("TYPE_NAME");
 				int size = rs.getInt("COLUMN_SIZE");
-				Map<String, Object> column = new HashMap<String, Object>();
-				column.put("name", name);
-				column.put("type", type + "(" + size + ")");
+				Column column = new Column();
+				column.setName(name);
+				column.setType(type);
+				column.setSize(size);
 				columnList.add(column);
 			}
 		} catch (SQLException e) {
@@ -89,10 +109,10 @@ public class DBHelper {
 
 		return columnList;
 	}
-	
-	public static List<Map<String, Object>> getPrimaryKeys(String table) {
+
+	public static List<Column> getPrimaryKeys(String table) {
 		DatabaseMetaData m = getDatabaseMetaData();
-		List<Map<String, Object>> columnList = new ArrayList<Map<String, Object>>();
+		List<Column> columnList = new ArrayList<Column>();
 
 		String catalog = null;
 		String schema = null;
@@ -101,10 +121,8 @@ public class DBHelper {
 			ResultSet rs = m.getPrimaryKeys(catalog, schema, tableNamePattern);
 			while (rs.next()) {
 				String name = rs.getString("COLUMN_NAME");
-				String pkname = rs.getString("PK_NAME");
-				Map<String, Object> column = new HashMap<String, Object>();
-				column.put("name", name);
-				column.put("pkname", pkname);
+				Column column = new Column();
+				column.setName(name);
 				columnList.add(column);
 			}
 		} catch (SQLException e) {

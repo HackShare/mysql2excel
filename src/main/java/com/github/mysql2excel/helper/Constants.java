@@ -1,4 +1,4 @@
-package com.github.mysql2excel;
+package com.github.mysql2excel.helper;
 
 public class Constants {
 
