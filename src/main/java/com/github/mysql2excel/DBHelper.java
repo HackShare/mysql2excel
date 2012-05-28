@@ -30,7 +30,7 @@ public class DBHelper {
 		return conn;
 	}
 
-	public static DatabaseMetaData getDatabaseMetaData() {
+	private static DatabaseMetaData getDatabaseMetaData() {
 		Connection con = getConnection();
 		DatabaseMetaData meta = null;
 		try {
@@ -41,7 +41,7 @@ public class DBHelper {
 		return meta;
 	}
 
-	public static List<Map<String, Object>> getAllTables() {
+	public static List<Map<String, Object>> getTables() {
 		DatabaseMetaData m = getDatabaseMetaData();
 		String catalog = null;
 		String schemaPattern = null;
@@ -53,16 +53,65 @@ public class DBHelper {
 					tableNamePattern, types);
 			while (rs.next()) {
 				String tableName = rs.getString("TABLE_NAME");
-				String tableType = rs.getString("TABLE_TYPE");
 				Map<String, Object> table = new HashMap<String, Object>();
 				table.put("name", tableName);
-				table.put("type", tableType);
 				tableList.add(table);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return tableList;
+	}
+
+	public static List<Map<String, Object>> getColumns(String table) {
+		DatabaseMetaData m = getDatabaseMetaData();
+		List<Map<String, Object>> columnList = new ArrayList<Map<String, Object>>();
+
+		String catalog = null;
+		String schemaPattern = null;
+		String tableNamePattern = table;
+		String columnNamePattern = "%";
+		try {
+			ResultSet rs = m.getColumns(catalog, schemaPattern,
+					tableNamePattern, columnNamePattern);
+			while (rs.next()) {
+				String name = rs.getString("COLUMN_NAME");
+				String type = rs.getString("TYPE_NAME");
+				int size = rs.getInt("COLUMN_SIZE");
+				Map<String, Object> column = new HashMap<String, Object>();
+				column.put("name", name);
+				column.put("type", type + "(" + size + ")");
+				columnList.add(column);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return columnList;
+	}
+	
+	public static List<Map<String, Object>> getPrimaryKeys(String table) {
+		DatabaseMetaData m = getDatabaseMetaData();
+		List<Map<String, Object>> columnList = new ArrayList<Map<String, Object>>();
+
+		String catalog = null;
+		String schema = null;
+		String tableNamePattern = table;
+		try {
+			ResultSet rs = m.getPrimaryKeys(catalog, schema, tableNamePattern);
+			while (rs.next()) {
+				String name = rs.getString("COLUMN_NAME");
+				String pkname = rs.getString("PK_NAME");
+				Map<String, Object> column = new HashMap<String, Object>();
+				column.put("name", name);
+				column.put("pkname", pkname);
+				columnList.add(column);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return columnList;
 	}
 
 }

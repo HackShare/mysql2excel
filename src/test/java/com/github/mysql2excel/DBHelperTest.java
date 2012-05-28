@@ -17,10 +17,23 @@ public class DBHelperTest {
 
 	@Test
 	public void testGetAllTabes() {
-		List<Map<String, Object>> list = DBHelper.getAllTables();
-		for (Map<String, Object> table : list) {
-			System.out.println(table.get("name") + ", " + table.get("type"));
-		}
+		List<Map<String, Object>> list = DBHelper.getTables();
+		boolean empty = list.isEmpty();
+		Assert.assertFalse(empty);
+	}
+
+	@Test
+	public void testGetColumns() {
+		List<Map<String, Object>> list = DBHelper.getColumns("user");
+		boolean empty = list.isEmpty();
+		Assert.assertFalse(empty);
+	}
+	
+	@Test
+	public void testGetPrimaryKeys() {
+		List<Map<String, Object>> list = DBHelper.getPrimaryKeys("user");
+		boolean empty = list.isEmpty();
+		Assert.assertFalse(empty);
 	}
 
 }

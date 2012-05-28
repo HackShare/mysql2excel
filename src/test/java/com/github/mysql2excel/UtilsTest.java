@@ -17,7 +17,7 @@ public class UtilsTest {
 	}
 
 	@Test
-	public void testGetJDBCConfig2() {
+	public void testGetJDBCConfigWithParameter() {
 		String user = Utils.getJDBCConfig("jdbc.user");
 		Assert.assertEquals("root", user);
 	}
