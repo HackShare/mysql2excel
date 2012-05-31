@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import com.github.mysql2excel.helper.Constants;
 import com.github.mysql2excel.helper.M2EHelper;
 import com.github.mysql2excel.model.Column;
@@ -17,7 +19,12 @@ import com.github.mysql2excel.model.Table;
 
 public class DBAnalyzer {
 
+	private static Logger logger = Logger.getLogger(DBAnalyzer.class);
+
 	public static Connection getConnection() {
+
+		logger.info("Try to connect to database...");
+
 		Connection conn = null;
 		Properties config = M2EHelper
 				.loadProperties(Constants.JDBC_CONFIG_FILE);
@@ -30,8 +37,9 @@ public class DBAnalyzer {
 			Class.forName(driver);
 			conn = DriverManager.getConnection(url, user, pass);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Database connection failed!", e);
 		}
+		logger.info("Database connection success :)");
 		return conn;
 	}
 
