@@ -6,18 +6,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 public class M2EHelper {
+
+	private static Logger logger = Logger.getLogger(M2EHelper.class);
+	private static Properties jdbcProperties = null;
 
 	private M2EHelper() {
 
 	}
 
-	// --------------------------------------------
-
-	private static Properties jdbcProperties = null;
-
 	public static Properties loadProperties(String configFile) {
-
 		if (jdbcProperties == null) {
 			jdbcProperties = new Properties();
 			InputStream is = null;
@@ -39,7 +39,6 @@ public class M2EHelper {
 				}
 			}
 		}
-
 		return jdbcProperties;
 	}
 
@@ -49,6 +48,7 @@ public class M2EHelper {
 		if (value == null) {
 			return "[" + key + "]";
 		} else {
+			logger.error("Property for [" + key + "] not found!");
 			return value.toString();
 		}
 	}
