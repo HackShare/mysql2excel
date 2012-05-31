@@ -22,8 +22,8 @@ public class M2EHelperTest {
 
 	@Test
 	public void testGetJDBCConfigWithParameter() {
-		String user = M2EHelper.getJDBCConfig("jdbc.user");
-		Assert.assertEquals("root", user);
+		String testKey = M2EHelper.getJDBCConfig("test.key");
+		Assert.assertEquals("mysql2excel", testKey);
 	}
 
 }

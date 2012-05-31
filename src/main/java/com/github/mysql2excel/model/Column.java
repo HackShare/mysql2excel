@@ -2,6 +2,8 @@ package com.github.mysql2excel.model;
 
 public class Column extends Model {
 
+	private static final long serialVersionUID = 207286483857849817L;
+
 	private String name;
 	private String type;
 	private int size;

@@ -2,13 +2,13 @@ package com.github.mysql2excel;
 
 import java.sql.Connection;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.github.mysql2excel.database.DBAnalyzer;
 import com.github.mysql2excel.model.Column;
+import com.github.mysql2excel.model.Database;
 import com.github.mysql2excel.model.Table;
 
 public class DBAnalyzerTest {
@@ -21,16 +21,16 @@ public class DBAnalyzerTest {
 
 	@Test
 	public void testGetDatabaseInfo() {
-		Map<String, Object> info = DBAnalyzer.getDatabaseInfo();
-		boolean empty = info.isEmpty();
-		Assert.assertFalse(empty);
-		Assert.assertTrue(info.containsKey("name"));
-		Assert.assertTrue(info.containsKey("version"));
+		Database db = DBAnalyzer.getDatabaseInfo();
+		Assert.assertNotNull(db);
+		Assert.assertNotNull(db.getName());
+		Assert.assertNotNull(db.getVersion());
 	}
 
 	@Test
 	public void testGetAllTabes() {
 		List<Table> list = DBAnalyzer.getTables();
+		Assert.assertNotNull(list);
 		boolean empty = list.isEmpty();
 		Assert.assertFalse(empty);
 	}
@@ -38,6 +38,7 @@ public class DBAnalyzerTest {
 	@Test
 	public void testGetColumns() {
 		List<Column> list = DBAnalyzer.getColumns("user");
+		Assert.assertNotNull(list);
 		boolean empty = list.isEmpty();
 		Assert.assertFalse(empty);
 	}

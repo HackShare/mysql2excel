@@ -5,7 +5,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-public class Model {
+public class Model implements java.io.Serializable {
+
+	private static final long serialVersionUID = -2576915435267191495L;
 
 	@Override
 	public String toString() {
