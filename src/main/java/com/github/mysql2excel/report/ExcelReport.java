@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -28,6 +30,7 @@ public class ExcelReport extends ReportTemplate {
 		this.fileName = fileName;
 	}
 
+	@Override
 	public void init() {
 		logger.info("Init report.");
 		if (workbook == null) {
@@ -35,16 +38,30 @@ public class ExcelReport extends ReportTemplate {
 		}
 	}
 
+	@Override
 	public void database() {
 		logger.info("Generate database information.");
 		Database x = DAQ.getBaseInfo();
 		Sheet database = workbook.createSheet("Database Info");
-		Row r1 = database.createRow(1);
-		r1.createCell(1).setCellValue("Database Name:");
-		r1.createCell(2).setCellValue(x.getName());
+
+		Cell r11 = cell(database, 1, 1, CellStyles.getStyle("title"));
+		r11.setCellValue(x.getName() + " - " + x.getVersion());
 
 	}
 
+	private Cell cell(Sheet sheet, int rowIndex, int columnIndex,
+			CellStyle style) {
+		Row row = sheet.getRow(rowIndex);
+		if (row == null) {
+			row = sheet.createRow(rowIndex);
+		}
+		Cell cell = row.createCell(columnIndex);
+		cell.setCellStyle(style);
+
+		return cell;
+	}
+
+	@Override
 	public void table() {
 		logger.info("Generate table list.");
 		Analyzer a = new TableAnalyzer();
@@ -56,21 +73,25 @@ public class ExcelReport extends ReportTemplate {
 		}
 	}
 
+	@Override
 	public void view() {
 		logger.info("Generate view list.");
 		workbook.createSheet("View List");
 	}
 
+	@Override
 	public void data() {
 		logger.info("Generate data storage.");
 		workbook.createSheet("Data Info");
 	}
 
+	@Override
 	public void functionAndProcedure() {
 		logger.info("Generate function and procedure.");
 		workbook.createSheet("Function & Procedure");
 	}
 
+	@Override
 	public void writeReport() {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(fileName);

@@ -27,19 +27,19 @@ public class DAQTest {
 		Assert.assertFalse(empty);
 	}
 
-//	@Test
-//	public void testGetColumns() {
-//		List<Column> list = DBAnalyzer.getColumns("user");
-//		Assert.assertNotNull(list);
-//		boolean empty = list.isEmpty();
-//		Assert.assertFalse(empty);
-//	}
-//
-//	@Test
-//	public void testGetPrimaryKeys() {
-//		List<Column> list = DBAnalyzer.getPrimaryKeys("user");
-//		boolean empty = list.isEmpty();
-//		Assert.assertFalse(empty);
-//	}
+	// @Test
+	// public void testGetColumns() {
+	// List<Column> list = DBAnalyzer.getColumns("user");
+	// Assert.assertNotNull(list);
+	// boolean empty = list.isEmpty();
+	// Assert.assertFalse(empty);
+	// }
+	//
+	// @Test
+	// public void testGetPrimaryKeys() {
+	// List<Column> list = DBAnalyzer.getPrimaryKeys("user");
+	// boolean empty = list.isEmpty();
+	// Assert.assertFalse(empty);
+	// }
 
 }

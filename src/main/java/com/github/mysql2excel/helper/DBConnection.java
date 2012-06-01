@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-
 public class DBConnection {
 
 	private static Connection con = null;
