@@ -46,9 +46,9 @@ public class M2EHelper {
 		Properties properties = loadProperties(Constants.JDBC_CONFIG_FILE);
 		Object value = properties.get(key);
 		if (value == null) {
+			logger.info("Property for [" + key + "] not found!");
 			return "[" + key + "]";
 		} else {
-			logger.error("Property for [" + key + "] not found!");
 			return value.toString();
 		}
 	}

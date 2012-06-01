@@ -3,19 +3,22 @@ package com.github.mysql2excel.report;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
-import com.github.mysql2excel.database.DBAnalyzer;
+import com.github.mysql2excel.database.Analyzer;
+import com.github.mysql2excel.database.DAQ;
+import com.github.mysql2excel.database.TableAnalyzer;
 import com.github.mysql2excel.model.Database;
+import com.github.mysql2excel.model.Table;
 
 public class ExcelReport extends ReportTemplate {
-	
+
 	private static Logger logger = Logger.getLogger(ExcelReport.class);
 
 	private Workbook workbook = null;
@@ -34,17 +37,23 @@ public class ExcelReport extends ReportTemplate {
 
 	public void database() {
 		logger.info("Generate database information.");
-		Database x = DBAnalyzer.getDatabaseInfo();
+		Database x = DAQ.getBaseInfo();
 		Sheet database = workbook.createSheet("Database Info");
 		Row r1 = database.createRow(1);
 		r1.createCell(1).setCellValue("Database Name:");
 		r1.createCell(2).setCellValue(x.getName());
-		
+
 	}
 
 	public void table() {
 		logger.info("Generate table list.");
+		Analyzer a = new TableAnalyzer();
+		@SuppressWarnings("unchecked")
+		List<Table> list = (List<Table>) a.analyse();
 		workbook.createSheet("Table List");
+		for (Table table : list) {
+			table.getName();
+		}
 	}
 
 	public void view() {
